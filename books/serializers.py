@@ -4,6 +4,11 @@ from books.models import Books
 
 
 class BookSerializer(serializers.ModelSerializer):
+    choices = {
+        "HARD": "HARD",
+        "SOFT": "SOFT",
+    }
+    cover = serializers.ChoiceField(choices=choices)
     class Meta:
         model = Books
-        id = ("title", "author", "cover", "inventory", "Daily_fee")
+        fields = ("title", "author", "cover", "inventory", "Daily_fee")
