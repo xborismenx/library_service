@@ -38,7 +38,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework_simplejwt',
-
+    'django_q',
 
     "books",
     "borrowings",
@@ -138,3 +138,19 @@ SIMPLE_JWT = {
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZE",
 }
 
+Q_CLUSTER = {
+    'name': 'library_service',
+    'workers': 8,
+    'recycle': 500,
+    'timeout': 60,
+    'compress': True,
+    'cpu_affinity': 1,
+    'save_limit': 250,
+    'queue_limit': 500,
+    'label': 'Django Q',
+    'redis': {
+        'host': '127.0.0.1',
+        'port': 6379,
+        'db': 0,
+    }
+}
