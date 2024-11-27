@@ -38,7 +38,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework_simplejwt',
-    'django_celery_beat',
+
 
     "books",
     "borrowings",
@@ -138,7 +138,3 @@ SIMPLE_JWT = {
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZE",
 }
 
-#Celery settings
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
-TIMEZONE = 'Europe/Kyiv'
