@@ -13,7 +13,9 @@ class BorrowingWriteSerializer(serializers.ModelSerializer):
     def validate(self, data):
         book = data["book"]
         if book.inventory <= 0:
-            raise serializers.ValidationError({"detail": f"Book {book.title} does not have in inventory."})
+            raise serializers.ValidationError(
+                {"detail": f"Book {book.title} does not have in inventory."}
+            )
         return data
 
     def create(self, validated_data):
@@ -22,11 +24,15 @@ class BorrowingWriteSerializer(serializers.ModelSerializer):
             with transaction.atomic():
                 book.inventory -= 1
                 book.save()
-                user = self.context['request'].user
-                borrowing = Borrowing.objects.create(user=user, book=book, **validated_data)
+                user = self.context["request"].user
+                borrowing = Borrowing.objects.create(
+                    user=user, book=book, **validated_data
+                )
                 return borrowing
         except IntegrityError:
-            raise ValidationError({'detail': 'This user has already borrowed this book.'})
+            raise ValidationError(
+                {"detail": "This user has already borrowed this book."}
+            )
 
 
 class BorrowingReadSerializer(serializers.ModelSerializer):

@@ -7,7 +7,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from borrowings.models import Borrowing
-from borrowings.serializers import BorrowingWriteSerializer, BorrowingReadSerializer, BorrowingReturnSerializer
+from borrowings.serializers import (
+    BorrowingWriteSerializer,
+    BorrowingReadSerializer,
+    BorrowingReturnSerializer,
+)
 
 
 class BorrowingsListCreateView(generics.ListCreateAPIView):
@@ -16,15 +20,17 @@ class BorrowingsListCreateView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_serializer_class(self):
-        if self.request.method == 'POST':
+        if self.request.method == "POST":
             return BorrowingWriteSerializer
         return BorrowingReadSerializer
 
     def get_queryset(self):
-        queryset = self.queryset.all().annotate(is_active=Case(
-            When(actual_return_date__isnull=True, then=Value(True)),
-            default=Value(False),
-            output_field=BooleanField())
+        queryset = self.queryset.all().annotate(
+            is_active=Case(
+                When(actual_return_date__isnull=True, then=Value(True)),
+                default=Value(False),
+                output_field=BooleanField(),
+            )
         )
 
         # only staff can filter borrowings
@@ -56,7 +62,12 @@ class BorrowingsReturnView(generics.UpdateAPIView):
         borrowing = self.get_object()
 
         if borrowing.actual_return_date:
-            return Response({"detail": "This book is already returned", }, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {
+                    "detail": "This book is already returned",
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         with transaction.atomic():
             borrowing.actual_return_date = now().date()
@@ -65,4 +76,6 @@ class BorrowingsReturnView(generics.UpdateAPIView):
             borrowing.book.inventory += 1
             borrowing.book.save()
 
-            return Response({'message': 'Book returned successfully.'}, status=status.HTTP_200_OK)
+            return Response(
+                {"message": "Book returned successfully."}, status=status.HTTP_200_OK
+            )

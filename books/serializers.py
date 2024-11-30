@@ -9,6 +9,7 @@ class BookSerializer(serializers.ModelSerializer):
         "SOFT": "SOFT",
     }
     cover = serializers.ChoiceField(choices=choices)
+
     class Meta:
         model = Books
-        fields = ("id","title", "author", "cover", "inventory", "Daily_fee")
+        fields = ("id", "title", "author", "cover", "inventory", "Daily_fee")

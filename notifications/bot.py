@@ -13,6 +13,7 @@ TOKEN = getenv("BOT_API_TOKEN")
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
+
 async def main() -> None:
     await dp.start_polling(bot)
 
