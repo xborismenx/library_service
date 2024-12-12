@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from books.models import Books
 
@@ -11,11 +12,10 @@ BOOK_LIST_URL = reverse('books:books-list')
 class BookViewSetUserTestCase(APITestCase):
     def setUp(self):
         self.client = APIClient()
-        self.admin_user = get_user_model().objects.create_user(email="user@mail.com", password="user123")
-        response = self.client.post(reverse("user:token_obtain_pair"),
-                                    {'email': 'user@mail.com', 'password': 'user123'})
-        token = response.data['access']
-        self.client.credentials(HTTP_AUTHORIZE='Bearer ' + token)
+        self.user = get_user_model().objects.create_user(email="user@mail.com", password="user123")
+        refresh = RefreshToken.for_user(self.user)
+        self.token = str(refresh.access_token)
+        self.client.credentials(HTTP_AUTHORIZE=f"Bearer {self.token}")
 
         self.book = Books.objects.create(
             title="Book",
@@ -55,9 +55,9 @@ class BookViewSetAdminTestCase(APITestCase):
     def setUp(self):
         self.client = APIClient()
         self.admin_user = get_user_model().objects.create_superuser(email="admin", password="admin123")
-        response = self.client.post(reverse("user:token_obtain_pair"), {'email': 'admin', 'password': 'admin123'})
-        token = response.data['access']
-        self.client.credentials(HTTP_AUTHORIZE='Bearer ' + token)
+        refresh = RefreshToken.for_user(self.admin_user)
+        self.token = str(refresh.access_token)
+        self.client.credentials(HTTP_AUTHORIZE=f"Bearer {self.token}")
 
         self.book1 = Books.objects.create(
             title="Book 1",
