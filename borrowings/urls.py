@@ -11,3 +11,5 @@ urlpatterns = [
     path("<int:pk>/", BorrowingsDetailView.as_view(), name="borrowings_detail"),
     path("<int:pk>/return/", BorrowingsReturnView.as_view(), name="borrowings_return"),
 ]
+
+app_name = "borrowings"
