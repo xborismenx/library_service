@@ -10,7 +10,7 @@ from borrowings.models import Borrowing
 from borrowings.serializers import (
     BorrowingWriteSerializer,
     BorrowingReadSerializer,
-    BorrowingReturnSerializer,
+    BorrowingReturnSerializer, BorrowingDetailSerializer,
 )
 
 
@@ -50,7 +50,7 @@ class BorrowingsListCreateView(generics.ListCreateAPIView):
 
 class BorrowingsDetailView(generics.RetrieveAPIView):
     queryset = Borrowing.objects.all()
-    serializer_class = BorrowingReadSerializer
+    serializer_class = BorrowingDetailSerializer
 
 
 class BorrowingsReturnView(generics.UpdateAPIView):

@@ -2,7 +2,9 @@ from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
 from rest_framework import serializers
 
+from books.serializers import BookSerializer
 from borrowings.models import Borrowing
+from user.serializers import UserProfileSerializer
 
 
 class BorrowingWriteSerializer(serializers.ModelSerializer):
@@ -40,6 +42,15 @@ class BorrowingReadSerializer(serializers.ModelSerializer):
         model = Borrowing
         fields = ("id", "book", "user", "expected_return_date")
         read_only_fields = ("id", "user", "book", "expected_return_date")
+
+
+class BorrowingDetailSerializer(serializers.ModelSerializer):
+    book = BookSerializer()
+    user = UserProfileSerializer()
+
+    class Meta:
+        model = Borrowing
+        fields = ("id", "book", "user", "expected_return_date")
 
 
 class BorrowingReturnSerializer(serializers.ModelSerializer):
