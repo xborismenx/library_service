@@ -1,7 +1,7 @@
 from django.db import transaction
 from django.db.models import Case, When, Value, BooleanField
-from django.shortcuts import render
 from django.utils.timezone import now
+from drf_spectacular.utils import extend_schema
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -53,6 +53,11 @@ class BorrowingsDetailView(generics.RetrieveAPIView):
     serializer_class = BorrowingDetailSerializer
 
 
+@extend_schema(
+    request=BorrowingReturnSerializer,
+    summary="Endpoint for return borrowing book",
+    description="Endpoint for return borrowing book from auth user",
+)
 class BorrowingsReturnView(generics.UpdateAPIView):
     queryset = Borrowing.objects.all()
     serializer_class = BorrowingReturnSerializer
